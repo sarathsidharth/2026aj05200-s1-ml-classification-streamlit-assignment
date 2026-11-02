@@ -1,0 +1,339 @@
+{
+  "project": "2026aj05200-s1-ml-classification-streamlit-assignment",
+  "student_id": "2026AJ05200",
+  "created_utc": "2026-11-02T13:42:22Z",
+  "dataset": {
+    "name": "UCI Bank Marketing (bank-full.csv)",
+    "source": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+    "file": "data/bank-full.csv",
+    "separator": ";",
+    "rows": 45211,
+    "original_input_features": 16,
+    "model_input_features": 15,
+    "class_distribution": {
+      "rows": 45211,
+      "no": 39922,
+      "yes": 5289,
+      "positive_rate": 0.116985
+    }
+  },
+  "features": {
+    "numerical": [
+      "age",
+      "balance",
+      "day",
+      "campaign",
+      "pdays",
+      "previous"
+    ],
+    "categorical": [
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "contact",
+      "month",
+      "poutcome"
+    ],
+    "all": [
+      "age",
+      "balance",
+      "day",
+      "campaign",
+      "pdays",
+      "previous",
+      "job",
+      "marital",
+      "education",
+      "default",
+      "housing",
+      "loan",
+      "contact",
+      "month",
+      "poutcome"
+    ]
+  },
+  "target": {
+    "column": "y",
+    "positive_label": "yes",
+    "negative_label": "no",
+    "encoding": {
+      "no": 0,
+      "yes": 1
+    }
+  },
+  "excluded_features": {
+    "duration": "Length of the last call in seconds. It is only known after the call has ended, when the outcome is also known, so using it would be target leakage. The UCI dataset notes recommend discarding it for a realistic predictive model."
+  },
+  "split": {
+    "method": "train_test_split, stratified on y, shuffle=True",
+    "test_size": 0.2,
+    "random_state": 42,
+    "train": {
+      "rows": 36168,
+      "no": 31937,
+      "yes": 4231,
+      "positive_rate": 0.116982
+    },
+    "test": {
+      "rows": 9043,
+      "no": 7985,
+      "yes": 1058,
+      "positive_rate": 0.116997
+    },
+    "test_data_file": "test_data.csv"
+  },
+  "preprocessing": {
+    "numerical": "SimpleImputer(strategy='median') -> StandardScaler()",
+    "categorical": "SimpleImputer(strategy='most_frequent') -> OneHotEncoder(handle_unknown='ignore', sparse_output=False)",
+    "unknown_category": "'unknown' kept as its own category",
+    "fitted_on": "training split only (inside each model Pipeline)",
+    "output_columns": 50
+  },
+  "metric_notes": {
+    "positive_class": "yes",
+    "auc": "roc_auc_score on predict_proba[:, 1]; SVC uses decision_function (same ranking)",
+    "threshold": "default: P(yes) > 0.5, or decision_function > 0 for SVC",
+    "majority_baseline_accuracy": 0.883003
+  },
+  "models": {
+    "Logistic Regression": {
+      "file": "model/logistic_regression.pkl",
+      "estimator": "LogisticRegression",
+      "params": {
+        "C": 1.0,
+        "class_weight": "balanced",
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": 0.0,
+        "max_iter": 1000,
+        "n_jobs": null,
+        "penalty": "deprecated",
+        "random_state": 42,
+        "solver": "lbfgs",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "rationale": "Linear baseline on standardised + one-hot features. max_iter=1000 guarantees the lbfgs solver converges on 50 columns; class_weight='balanced' up-weights the 11.7% 'yes' class so the model does not simply predict 'no'. Default L2 regularisation (C=1.0).",
+      "score_source": "predict_proba",
+      "fit_seconds": 1.53,
+      "test_scoring_seconds": 0.12,
+      "file_size_mb": 0.0,
+      "test_metrics": {
+        "accuracy": 0.7548379962401858,
+        "auc": 0.7722383533397332,
+        "precision": 0.2662363856393707,
+        "recall": 0.6238185255198487,
+        "f1": 0.37319762510602206,
+        "mcc": 0.2853454239356379
+      },
+      "train_metrics": {
+        "accuracy": 0.7571333775713338,
+        "auc": 0.768083853221222,
+        "precision": 0.26918787387204707,
+        "recall": 0.627511226660364,
+        "f1": 0.3767560664112388,
+        "mcc": 0.28998336900906635
+      },
+      "test_confusion_matrix": {
+        "tn": 6166,
+        "fp": 1819,
+        "fn": 398,
+        "tp": 660
+      }
+    },
+    "Decision Tree": {
+      "file": "model/decision_tree.pkl",
+      "estimator": "DecisionTreeClassifier",
+      "params": {
+        "ccp_alpha": 0.0,
+        "class_weight": "balanced",
+        "criterion": "gini",
+        "max_depth": 8,
+        "max_features": null,
+        "max_leaf_nodes": null,
+        "min_impurity_decrease": 0.0,
+        "min_samples_leaf": 20,
+        "min_samples_split": 2,
+        "min_weight_fraction_leaf": 0.0,
+        "monotonic_cst": null,
+        "random_state": 42,
+        "splitter": "best"
+      },
+      "rationale": "Captures non-linear interactions (e.g. poutcome x month). max_depth=8 and min_samples_leaf=20 limit tree growth so it does not memorise the training data (an unpruned tree overfits badly); class_weight='balanced' handles the imbalance.",
+      "score_source": "predict_proba",
+      "fit_seconds": 0.37,
+      "test_scoring_seconds": 0.06,
+      "file_size_mb": 0.01,
+      "test_metrics": {
+        "accuracy": 0.8285967046334182,
+        "auc": 0.7792303148744161,
+        "precision": 0.35681024447031434,
+        "recall": 0.5793950850661626,
+        "f1": 0.44164265129682995,
+        "mcc": 0.3613382542164317
+      },
+      "train_metrics": {
+        "accuracy": 0.8339692545896925,
+        "auc": 0.7893364304652404,
+        "precision": 0.3671758011380653,
+        "recall": 0.5795320255258805,
+        "f1": 0.4495370794756623,
+        "mcc": 0.3704405560417182
+      },
+      "test_confusion_matrix": {
+        "tn": 6880,
+        "fp": 1105,
+        "fn": 445,
+        "tp": 613
+      }
+    },
+    "KNN": {
+      "file": "model/knn.pkl",
+      "estimator": "KNeighborsClassifier",
+      "params": {
+        "algorithm": "auto",
+        "leaf_size": 30,
+        "metric": "minkowski",
+        "metric_params": null,
+        "n_jobs": null,
+        "n_neighbors": 15,
+        "p": 2,
+        "weights": "uniform"
+      },
+      "rationale": "Instance-based model on standardised features (scaling is essential for distances). k=15 smooths the noisy decisions of small k and gives finer-grained probabilities for AUC. KNN has no class_weight option, so with uniform voting the majority 'no' class dominates most neighbourhoods; expect high accuracy but low recall.",
+      "score_source": "predict_proba",
+      "fit_seconds": 0.24,
+      "test_scoring_seconds": 0.58,
+      "file_size_mb": 1.29,
+      "test_metrics": {
+        "accuracy": 0.8920712153046555,
+        "auc": 0.7348689591661113,
+        "precision": 0.6474820143884892,
+        "recall": 0.17013232514177692,
+        "f1": 0.2694610778443114,
+        "mcc": 0.29393557035586215
+      },
+      "train_metrics": {
+        "accuracy": 0.8955706702057067,
+        "auc": 0.8619114503280791,
+        "precision": 0.6913996627318718,
+        "recall": 0.19380761049397305,
+        "f1": 0.3027505999630792,
+        "mcc": 0.3290817806208155
+      },
+      "test_confusion_matrix": {
+        "tn": 7887,
+        "fp": 98,
+        "fn": 878,
+        "tp": 180
+      }
+    },
+    "Naive Bayes": {
+      "file": "model/naive_bayes.pkl",
+      "estimator": "GaussianNB",
+      "params": {
+        "priors": null,
+        "var_smoothing": 1e-09
+      },
+      "rationale": "Gaussian Naive Bayes on the dense preprocessed matrix (hence dense one-hot output). Fast probabilistic baseline with default var_smoothing=1e-9. It assumes features are independent and Gaussian, which the skewed and one-hot features violate, so its probabilities are poorly calibrated. It has no class_weight; priors come from the training data.",
+      "score_source": "predict_proba",
+      "fit_seconds": 0.21,
+      "test_scoring_seconds": 0.05,
+      "file_size_mb": 0.0,
+      "test_metrics": {
+        "accuracy": 0.8451841203140551,
+        "auc": 0.7514405554838763,
+        "precision": 0.37084592145015105,
+        "recall": 0.46408317580340264,
+        "f1": 0.41225860621326615,
+        "mcc": 0.32709338687434125
+      },
+      "train_metrics": {
+        "accuracy": 0.8407984959079849,
+        "auc": 0.7430424744496866,
+        "precision": 0.3563499529633114,
+        "recall": 0.4476483100921768,
+        "f1": 0.39681542007123405,
+        "mcc": 0.30911858195672226
+      },
+      "test_confusion_matrix": {
+        "tn": 7152,
+        "fp": 833,
+        "fn": 567,
+        "tp": 491
+      }
+    },
+    "Support Vector Machine": {
+      "file": "model/svm.pkl",
+      "estimator": "SVC",
+      "params": {
+        "C": 1.0,
+        "break_ties": false,
+        "cache_size": 200,
+        "class_weight": "balanced",
+        "coef0": 0.0,
+        "decision_function_shape": "ovr",
+        "degree": 3,
+        "gamma": "scale",
+        "kernel": "rbf",
+        "max_iter": -1,
+        "probability": "deprecated",
+        "random_state": 42,
+        "shrinking": true,
+        "tol": 0.001,
+        "verbose": false
+      },
+      "rationale": "RBF kernel for a non-linear boundary; C=1 and gamma='scale' are well-behaved defaults on standardised data; class_weight='balanced' handles the imbalance. probability=True is not used (deprecated in scikit-learn 1.9 and ~5x slower); AUC uses decision_function scores, which give the same ranking.",
+      "score_source": "decision_function",
+      "fit_seconds": 70.74,
+      "test_scoring_seconds": 10.27,
+      "file_size_mb": 0.85,
+      "test_metrics": {
+        "accuracy": 0.8361163330753069,
+        "auc": 0.7914157334226628,
+        "precision": 0.37529411764705883,
+        "recall": 0.6030245746691871,
+        "f1": 0.4626540971718637,
+        "mcc": 0.3866697636608115
+      },
+      "train_metrics": {
+        "accuracy": 0.8477936297279363,
+        "auc": 0.8473804271670606,
+        "precision": 0.4058806146572104,
+        "recall": 0.6492554951548097,
+        "f1": 0.49949995454132196,
+        "mcc": 0.4312787877936276
+      },
+      "test_confusion_matrix": {
+        "tn": 6923,
+        "fp": 1062,
+        "fn": 420,
+        "tp": 638
+      }
+    }
+  },
+  "best_model_by_metric": {
+    "Accuracy": "KNN",
+    "AUC": "Support Vector Machine",
+    "Precision": "KNN",
+    "Recall": "Logistic Regression",
+    "F1": "Support Vector Machine",
+    "MCC": "Support Vector Machine"
+  },
+  "versions": {
+    "python": "3.12.3",
+    "scikit-learn": "1.9.1",
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "joblib": "1.6.0",
+    "matplotlib": "3.11.2",
+    "seaborn": "0.13.2",
+    "altair": "6.3.0",
+    "streamlit": "1.66.1"
+  }
+}
