@@ -1,0 +1,48 @@
+# Streamlit settings for the term-deposit classifier dashboard.
+# Streamlit Community Cloud picks this file up automatically.
+
+[server]
+maxUploadSize = 25            # MB; the app only needs test data (~0.7 MB)
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "viewer"        # hide developer options in the ⋮ menu
+
+[theme]
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+headingFont = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+headingFontWeights = [800, 700, 650]
+baseFontSize = 15
+baseRadius = "0.65rem"
+buttonRadius = "0.55rem"
+showWidgetBorder = true
+showSidebarBorder = true
+chartCategoricalColors = ["#2563eb", "#f97316", "#10b981", "#a855f7", "#e11d48"]
+
+[theme.light]
+primaryColor = "#2563eb"
+backgroundColor = "#f5f7fb"
+secondaryBackgroundColor = "#e9eef6"
+textColor = "#0f172a"
+borderColor = "#d9e1ec"
+linkColor = "#1d4ed8"
+dataframeHeaderBackgroundColor = "#eef2f8"
+
+[theme.light.sidebar]
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f1f5fa"
+
+[theme.dark]
+primaryColor = "#4f8ff7"
+backgroundColor = "#0a101d"
+secondaryBackgroundColor = "#151e30"
+textColor = "#e6ebf3"
+borderColor = "#25314a"
+linkColor = "#8db8fb"
+dataframeHeaderBackgroundColor = "#151e30"
+
+[theme.dark.sidebar]
+backgroundColor = "#0e1626"
+secondaryBackgroundColor = "#172238"
