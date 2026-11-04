@@ -4,6 +4,8 @@
 
 This project trains five classification models on the UCI Bank Marketing dataset, compares them with six evaluation metrics, and serves them through an interactive Streamlit web app. The app loads the saved models and evaluates them on uploaded test data; it never retrains them.
 
+**Live app:** https://2026aj05200-s1-ml-classification.streamlit.app
+
 ---
 
 ## a. Problem statement
@@ -61,6 +63,8 @@ Because the classes are imbalanced (11.7% `yes`), a model that always answers "n
 ## c. GitHub repository link
 
 **Repository:** https://github.com/sarathsidharth/2026aj05200-s1-ml-classification-streamlit-assignment
+
+**Live Streamlit app:** https://2026aj05200-s1-ml-classification.streamlit.app
 
 ```
 2026aj05200-s1-ml-classification-streamlit-assignment/
@@ -210,6 +214,8 @@ The app only loads the saved models: uploaded data is transformed and scored, ne
 3. Under **Advanced settings**, select **Python 3.12**. Then click **Deploy**.
 
 Streamlit Cloud installs `requirements.txt` and reads `.streamlit/config.toml`. No training happens at start-up, because the models are already in `model/`.
+
+The deployed app is at https://2026aj05200-s1-ml-classification.streamlit.app. After a few days without visitors the free tier puts it to sleep; opening the link and clicking **"Yes, get this app back up"** wakes it in about a minute.
 
 ## Tech stack
 
